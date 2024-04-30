@@ -1,0 +1,62 @@
+/* Reset some default styles */
+body, h1, p, form {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+/* Basic styling for the header */
+h1 {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Styling for the form */
+form {
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+/* Style form labels and input fields */
+label {
+    display: block;
+    margin: 10px 0;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+/* Style buttons */
+button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Style links */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+/* Style navigation links */
+a[href="/signout"], a[href="/reset-password"] {
+    display: block;
+    margin: 10px 0;
+}
+
+/* Add some padding to the body */
+body {
+    padding: 20px;
+}
