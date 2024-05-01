@@ -2,23 +2,26 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" href="/style.css" />
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
   </head>
   <body>
     <h1>Welcome to the Home Page</h1>
-    <p>You are signed in!</p>
-
-    <% if (isLoggedIn) { %>
-    <a href="/logout">Sign Out</a>
-    <% } else { %>
-    <a href="/login">Login</a>
-    <% } %>
-
-    <br />
-    <a href="/signup">Sign Up</a>
-    <a href="/reset-password">Reset Password</a>
+    <div class="content">
+      <% if (isLoggedIn) { %>
+      <p>You are signed in!</p>
+      <button onclick="location.href='/logout'">Sign Out</button>
+      <button onclick="location.href='/reset-password'" class="nav-link">
+        Reset Password
+      </button>
+      <% } else { %>
+      <button onclick="location.href='/login'">Login</button>
+      <br />
+      <button onclick="location.href='/signup'" class="nav-link">
+        Sign Up
+      </button>
+      <% } %>
+    </div>
   </body>
 </html>
