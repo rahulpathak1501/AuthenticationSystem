@@ -10,6 +10,7 @@ const router = express.Router();
 //   res.render("home", { loggedIn });
 // });
 
+router.get("/", authController.renderHome);
 router.get("/home", authController.renderHome);
 
 router.get("/signup", authController.renderSignup);

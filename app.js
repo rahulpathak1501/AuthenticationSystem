@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const authRoutes = require("./routes/authRoutes");
-const googleAuth = require("./models/googleAuth"); // Import the googleAuth module
+const googleAuth = require("./models/googleAuth");
 
 const crypto = require("crypto");
 const secretKey = crypto.randomBytes(32).toString("hex");
@@ -38,6 +38,11 @@ app.use(passport.session());
 
 // Routes
 app.use("/", authRoutes);
+
+// Define a route handler for the root URL
+app.get("/", (req, res) => {
+  res.render("home"); // Renders views/home.ejs
+});
 
 // Start server
 const PORT = process.env.PORT || 3000;
