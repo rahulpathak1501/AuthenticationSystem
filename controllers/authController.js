@@ -3,8 +3,14 @@ const bcrypt = require("bcrypt");
 const User = require("../models/Users");
 
 exports.renderHome = (req, res) => {
-  res.render("home");
-  console.log("inside cotrollerr");
+  const loggedInByGoogle = req.isAuthenticated();
+  const loggedIn = req.session.userId ? true : false;
+  let isLoggedIn = false;
+  if (loggedInByGoogle === true || loggedIn === true) {
+    isLoggedIn = true;
+  }
+  // console.log(loggedInByGoogle);
+  res.render("home", { isLoggedIn });
 };
 
 exports.renderSignup = (req, res) => {
@@ -27,7 +33,7 @@ exports.signup = async (req, res) => {
     }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hashSync(password, 5);
 
     // Create a new user in the database
     const newUser = new User({
@@ -46,43 +52,49 @@ exports.signup = async (req, res) => {
 };
 
 exports.renderLogin = (req, res) => {
+  // console.log("inside");
   res.render("login");
 };
 
-exports.login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
 
-    // Implement logic to retrieve the user from the database based on the provided email
-    const user = await User.findOne({ email });
+  // Implement logic to retrieve the user from the database based on the provided email
+  const user = await User.findOne({ email });
 
-    // Check if the user exists
-    if (!user) {
-      return res
-        .status(401)
-        .render("login", { message: "Invalid email or password" });
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
-      return res
-        .status(401)
-        .render("login", { message: "Invalid email or password" });
-    }
-
-    req.session.userId = user._id;
-
-    res.redirect("/home");
-  } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).send("Internal Server Error");
+  if (!user) {
+    return res
+      .status(401)
+      .render("login", { message: "Invalid email or password" });
   }
+
+  const passwordMatch = await bcrypt.compareSync(password, user.password);
+
+  if (!passwordMatch) {
+    return res
+      .status(401)
+      .render("login", { message: "Invalid email or password" });
+  }
+
+  req.session.userId = user._id;
+
+  res.redirect("/home");
 };
 
 exports.logout = (req, res) => {
-  req.logout();
-  res.redirect("/");
+  req.logout((err) => {
+    if (err) {
+      console.error("Error logging out:", err);
+      return res.status(500).send("Internal Server Error");
+    }
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).send("Internal Server Error");
+      }
+      res.redirect("/home"); // Redirect to the home page after logout
+    });
+  });
 };
 
 exports.renderResetPassword = (req, res) => {

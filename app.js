@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const authRoutes = require("./routes/authRoutes");
+const googleAuth = require("./models/googleAuth"); // Import the googleAuth module
 
 const crypto = require("crypto");
 const secretKey = crypto.randomBytes(32).toString("hex");
