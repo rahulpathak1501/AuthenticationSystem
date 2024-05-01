@@ -6,6 +6,7 @@ const session = require("express-session");
 const passport = require("passport");
 const authRoutes = require("./routes/authRoutes");
 const googleAuth = require("./models/googleAuth");
+const path = require("path"); // Import the path module
 
 const crypto = require("crypto");
 const secretKey = crypto.randomBytes(32).toString("hex");
@@ -21,7 +22,12 @@ mongoose.connect("mongodb://localhost:27017/authentications", {
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
+// Set the view engine to use EJS
 app.set("view engine", "ejs");
+
+// Specify the directory where EJS files are located (change "views" to your directory name)
+app.set("views", path.join(__dirname, "views"));
 
 // Express Session
 app.use(
@@ -41,7 +47,6 @@ app.use("/", authRoutes);
 
 // Define a route handler for the root URL
 app.get("/", (req, res) => {
-  console.log("redirecting to the home page");
   res.render("home"); // Renders views/home.ejs
 });
 
