@@ -41,6 +41,7 @@ app.use("/", authRoutes);
 
 // Define a route handler for the root URL
 app.get("/", (req, res) => {
+  console.log("redirecting to the home page");
   res.render("home"); // Renders views/home.ejs
 });
 
