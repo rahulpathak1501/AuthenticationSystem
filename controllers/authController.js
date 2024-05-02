@@ -1,5 +1,6 @@
 const passport = require("passport");
 const bcrypt = require("bcrypt");
+const transporter = require("../nodemailer/nodemailer");
 const User = require("../models/Users");
 
 exports.renderHome = (req, res) => {
@@ -105,27 +106,33 @@ exports.resetPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    // Implement logic to check if the user with the provided email exists
+    // Find the user by email
     const user = await User.findOne({ email });
 
     // Check if the user exists
     if (!user) {
-      return res
-        .status(404)
-        .render("resetPassword", { message: "User not found with this email" });
+      return res.status(404).render("resetPassword", {
+        message: "User not found with this email",
+      });
     }
 
-    // Generate a random password (may use a library for this)
+    // Generate a new password
     const newPassword = generateRandomPassword();
 
     // Hash the new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update the user's password in the database
+    // Update user's password in the database
     user.password = hashedPassword;
     await user.save();
 
-    // Send the new password to the user's email (implement this logic using nodemailer or other email services)
+    // Send email with the new password
+    await transporter.sendMail({
+      from: "testingperposeemail@gmail.com",
+      to: user.email,
+      subject: "Password Reset",
+      text: `Your new password is: ${newPassword}`,
+    });
 
     // Redirect to the login page after successful password reset
     res.redirect("/login");
@@ -135,11 +142,11 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// Helper function to generate a random password (replace this with preferred method)
+// Helper function to generate a random password
 function generateRandomPassword() {
   const length = 10;
   const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#!$%";
   let newPassword = "";
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
