@@ -32,7 +32,7 @@ app.set("views", path.join(__dirname, "views"));
 // Express Session
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || secretKey,
+    secret: secretKey,
     resave: true,
     saveUninitialized: true,
   })
