@@ -15,7 +15,9 @@ exports.renderHome = (req, res) => {
 };
 
 exports.renderSignup = (req, res) => {
-  res.render("signup");
+  res.render("signup", {
+    error: "",
+  });
 };
 
 exports.signup = async (req, res) => {
@@ -24,7 +26,9 @@ exports.signup = async (req, res) => {
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      return res.status(400).send("Passwords do not match");
+      return res.status(400).render("signup", {
+        error: "Passwords do not match",
+      });
     }
 
     // Check if the user already exists
@@ -54,7 +58,7 @@ exports.signup = async (req, res) => {
 
 exports.renderLogin = (req, res) => {
   // console.log("inside");
-  res.render("login");
+  res.render("login", { message: "" });
 };
 
 exports.login = async (req, res) => {
